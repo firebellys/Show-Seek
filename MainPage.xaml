@@ -1,0 +1,571 @@
+﻿<Page x:Class="Show_Seek.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:Show_Seek"
+      xmlns:fa="http://schemas.fontawesome.io/icons/"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:interop="using:Windows.UI.Xaml.Interop"
+      mc:Ignorable="d">
+    <Page.Resources>
+        <Style TargetType="Button"
+               x:Key="SideButton">
+            <Setter Property="Foreground"
+                    Value="#EFFFCD"></Setter>
+            <Setter Property="Background"
+                    Value="Transparent"></Setter>
+            <Setter Property="FontFamily"
+                    Value="Segoe MDL2 Assets"></Setter>
+        </Style>
+        <Style TargetType="Button"
+               x:Key="MainButton">
+            <Setter Property="Foreground"
+                    Value="#EFFFCD"></Setter>
+            <Setter Property="Background"
+                    Value="#99173C"></Setter>
+            <Setter Property="Margin"
+                    Value="6"></Setter>
+        </Style>
+        <Style TargetType="TextBlock"
+               x:Key="SideText">
+            <Setter Property="Foreground"
+                    Value="#EFFFCD"></Setter>
+        </Style>
+        <Style TargetType="TextBox"
+               x:Key="SsTextBox">
+            <Setter Property="Foreground"
+                    Value="#EFFFCD"></Setter>
+            <Setter Property="Background"
+                    Value="#2E2633"></Setter>
+            <Setter Property="Margin"
+                    Value="6"></Setter>
+        </Style>
+        <Style TargetType="CheckBox">
+            <Setter Property="Background"
+                    Value="Transparent" />
+            <Setter Property="Foreground"
+                    Value="#99173C" />
+            <Setter Property="HorizontalAlignment"
+                    Value="Center" />
+            <Setter Property="VerticalAlignment"
+                    Value="Center" />
+            <Setter Property="HorizontalContentAlignment"
+                    Value="Center" />
+            <Setter Property="VerticalContentAlignment"
+                    Value="Center" />
+            <Setter Property="FontFamily"
+                    Value="{ThemeResource ContentControlThemeFontFamily}" />
+            <Setter Property="FontSize"
+                    Value="{ThemeResource ControlContentThemeFontSize}" />
+            <Setter Property="MinWidth"
+                    Value="32" />
+            <Setter Property="MinHeight"
+                    Value="32" />
+            <Setter Property="UseSystemFocusVisuals"
+                    Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Grid Background="{TemplateBinding Background}"
+                              BorderBrush="#99173C"
+                              BorderThickness="{TemplateBinding BorderThickness}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CombinedStates">
+                                    <VisualState x:Name="UnCheckedNormal"></VisualState>
+                                    <VisualState x:Name="UncheckedPointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="NormalRectangle"
+                                                                           Storyboard.TargetProperty="Stroke">
+                                                <DiscreteObjectKeyFrame KeyTime="0"
+                                                                        Value="#EFFFCD" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+
+                                    <VisualState x:Name="CheckedNormal">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="NormalRectangle"
+                                                                           Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0"
+                                                                        Value="#99173C" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <DoubleAnimation Storyboard.TargetName="NormalRectangle"
+                                                             Storyboard.TargetProperty="StrokeThickness"
+                                                             To="{ThemeResource CheckBoxCheckedStrokeThickness}"
+                                                             Duration="0" />
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="NormalRectangle"
+                                                                           Storyboard.TargetProperty="Stroke">
+                                                <DiscreteObjectKeyFrame KeyTime="0"
+                                                                        Value="#99173C" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <DoubleAnimation Storyboard.TargetName="CheckGlyph"
+                                                             Storyboard.TargetProperty="Opacity"
+                                                             To="1"
+                                                             Duration="0" />
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="0*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid VerticalAlignment="Top"
+                                  Height="32">
+                                <Rectangle x:Name="NormalRectangle"
+                                           Fill="Transparent"
+                                           Stroke="#EFFFCD"
+                                           StrokeThickness="{ThemeResource CheckBoxBorderThemeThickness}"
+                                           UseLayoutRounding="False"
+                                           Height="20"
+                                           Width="20" />
+                                <FontIcon x:Name="CheckGlyph"
+                                          FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                          Glyph="&#xE001;"
+                                          FontSize="20"
+                                          Foreground="#EFFFCD"
+                                          Opacity="0" />
+                            </Grid>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <!--Split View Area -->
+    <SplitView  DisplayMode="CompactOverlay"
+                IsPaneOpen="False"
+                x:Name="SplitViewPanel"
+                CompactPaneLength="0"
+                OpenPaneLength="150"
+                Background="#555152">
+        <SplitView.Pane>
+            <StackPanel Background="#99173C">
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="MenuButton1"
+                            Style="{StaticResource SideButton}"
+                            Content="&#xE10F;"
+                            Width="50"
+                            Height="50"
+                            Click="HomeClick" />
+                    <TextBlock Text="Home"
+                               Style="{StaticResource SideText}"
+                               FontSize="18"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="MenuButton4"
+                            Style="{StaticResource SideButton}"
+                            Content="&#xE735;"
+                            Width="50"
+                            Height="50"
+                            Click="PrivateClick">
+                    </Button>
+                    <TextBlock Text="Favorites"
+                               FontSize="18"
+                               Style="{StaticResource SideText}"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="MenuButton2"
+                            Style="{StaticResource SideButton}"
+                            Content="&#xE713;"
+                            Width="50"
+                            Height="50"
+                            Click="SettingsClick" />
+                    <TextBlock Text="Settings"
+                               FontSize="18"
+                               Style="{StaticResource SideText}"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="MenuButton5"
+                            Style="{StaticResource SideButton}"
+                            Content="&#xE720;"
+                            Width="50"
+                            Height="50"
+                            Click="AboutClick">
+                    </Button>
+                    <TextBlock Text="About"
+                               FontSize="18"
+                               Style="{StaticResource SideText}"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="MenuButton3"
+                            Style="{StaticResource SideButton}"
+                            Content="&#xE72C;"
+                            Width="50"
+                            Height="50"
+                            Click="RefreshClick" />
+                    <TextBlock Text="Refresh"
+                               FontSize="18"
+                               Style="{StaticResource SideText}"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+            </StackPanel>
+        </SplitView.Pane>
+        <SplitView.Content>
+            <Grid Background="Transparent">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"></RowDefinition>
+                    <RowDefinition Height="5*"></RowDefinition>
+                    <RowDefinition Height="0*"
+                                   x:Name="RowHeight"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <!-- Title Area -->
+                <Grid Background="#99173C">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                        <ColumnDefinition Width="5*"></ColumnDefinition>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="HamburgerButton"
+                            Content="&#xE700;"
+                            Width="50"
+                            HorizontalAlignment="Left"
+                            Grid.Column="0"
+                            Style="{StaticResource SideButton}"
+                            Height="50"
+                            Click="HamburgerButtonClick" />
+                    <TextBlock TextAlignment="Center"
+                               Grid.Column="1"
+                               FontSize="24"
+                               FontWeight="Black"
+                               Foreground="#EFFFCD"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center">showseek</TextBlock>
+
+                </Grid>
+
+                <!-- List Area -->
+                <ListBox x:Name="MainList"
+                         Visibility="Visible"
+                         Background="Transparent"
+                         HorizontalContentAlignment="Stretch"
+                         Grid.Row="1">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment"
+                                    Value="Stretch"></Setter>
+                            <Setter Property="Background"
+                                    Value="#2E2633"></Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <ListBoxItem Tapped="ListBoxItem_Tapped">
+                                <Grid Margin="0,2,0,2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="10"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid Background="Aquamarine"
+                                          Grid.Column="0"></Grid>
+                                    <Grid Grid.Column="1"
+                                          Margin="0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="1*"></RowDefinition>
+                                            <RowDefinition Height="1*"></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Row="0"
+                                                   FontSize="18"
+                                                   Style="{StaticResource SideText}"
+                                                   Text="{Binding Name}"></TextBlock>
+                                        <TextBlock Grid.Row="1"
+                                                   FontSize="12"
+                                                   Style="{StaticResource SideText}"
+                                                   Text="{Binding EventDate}"></TextBlock>
+                                    </Grid>
+                                </Grid>
+                            </ListBoxItem>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <!-- Meta Data Area -->
+                <Grid Grid.Row="2"
+                      Background="#99173C">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"></RowDefinition>
+                        <RowDefinition Height="1*"></RowDefinition>
+                        <RowDefinition Height="2*"></RowDefinition>
+                        <RowDefinition Height="2*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Style="{StaticResource SideText}"
+                               Grid.Row="0"
+                               Grid.Column="0"
+                               Grid.ColumnSpan="4">Title</TextBlock>
+                    <TextBlock Style="{StaticResource SideText}"
+                               Grid.Row="1"
+                               Grid.Column="0"
+                               Grid.ColumnSpan="4">Description</TextBlock>
+                    <StackPanel HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Orientation="Vertical">
+                        <Button Style="{StaticResource SideButton}"
+                                Content="&#xE910;"></Button>
+                        <TextBlock TextAlignment="Center"
+                                   Style="{StaticResource SideText}">tweet</TextBlock>
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Orientation="Vertical">
+                        <Button Style="{StaticResource SideButton}"
+                                Content="&#xE8E1;"></Button>
+                        <TextBlock TextAlignment="Center"
+                                   Style="{StaticResource SideText}">fb</TextBlock>
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Grid.Row="2"
+                                Grid.Column="2"
+                                Orientation="Vertical">
+                        <Button Style="{StaticResource SideButton}"
+                                Content="&#xE713;"></Button>
+                        <TextBlock TextAlignment="Center"
+                                   Style="{StaticResource SideText}">??</TextBlock>
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Grid.Row="2"
+                                Grid.Column="3"
+                                Orientation="Vertical">
+                        <Button Style="{StaticResource SideButton}"
+                                Content="&#xE707;"></Button>
+                        <TextBlock TextAlignment="Center"
+                                   Style="{StaticResource SideText}">map</TextBlock>
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Grid.Row="3"
+                                Grid.Column="0"
+                                Orientation="Vertical">
+                        <Button Style="{StaticResource SideButton}"
+                                Content="&#xE715;"></Button>
+                        <TextBlock TextAlignment="Center"
+                                   Style="{StaticResource SideText}">email</TextBlock>
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                Orientation="Vertical">
+                        <Button Style="{StaticResource SideButton}"
+                                Content="&#xE8BD;"></Button>
+                        <TextBlock TextAlignment="Center"
+                                   Style="{StaticResource SideText}">text</TextBlock>
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Grid.Row="3"
+                                Grid.Column="2"
+                                Orientation="Vertical">
+                        <Button Style="{StaticResource SideButton}"
+                                Content="&#xE8BF;"></Button>
+                        <TextBlock TextAlignment="Center"
+                                   Style="{StaticResource SideText}">cal</TextBlock>
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Grid.Row="3"
+                                Grid.Column="3"
+                                Orientation="Vertical">
+                        <Button Style="{StaticResource SideButton}"
+                                Content="&#xE734;"></Button>
+                        <TextBlock TextAlignment="Center"
+                                   Style="{StaticResource SideText}">fav</TextBlock>
+                    </StackPanel>
+
+
+                </Grid>
+
+                <!-- Settings Area -->
+                <StackPanel x:Name="SettingsPanel"
+                            Visibility="Collapsed"
+                            Grid.Row="1">
+                    <Grid Margin="0,0,6,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="10"></ColumnDefinition>
+                            <ColumnDefinition Width="6*"></ColumnDefinition>
+                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0"
+                              Background="#F80046"></Grid>
+                        <TextBlock Style="{StaticResource SideText}"
+                                   VerticalAlignment="Center"
+                                   Margin="12,0,0,0"
+                                   Grid.Column="1"
+                                   HorizontalAlignment="Stretch">Songkick Enabled</TextBlock>
+                        <CheckBox Foreground="#EFFFCD"
+                                  Margin="12"
+                                  Grid.Column="2"
+                                  HorizontalAlignment="Right"
+                                  BorderBrush="#EFFFCD"
+                                  IsChecked="False"></CheckBox>
+                    </Grid>
+                    <Grid Margin="0,0,6,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="10"></ColumnDefinition>
+                            <ColumnDefinition Width="6*"></ColumnDefinition>
+                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0"
+                              Background="#BB0000"></Grid>
+                        <TextBlock Style="{StaticResource SideText}"
+                                   VerticalAlignment="Center"
+                                   Margin="12,0,0,0"
+                                   Grid.Column="1"
+                                   HorizontalAlignment="Stretch">Songkick Enabled</TextBlock>
+                        <CheckBox Foreground="#EFFFCD"
+                                  Margin="12"
+                                  Grid.Column="2"
+                                  HorizontalAlignment="Right"
+                                  BorderBrush="#EFFFCD"
+                                  IsChecked="False"></CheckBox>
+                    </Grid>
+
+                    <Grid Margin="0,0,6,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="10"></ColumnDefinition>
+                            <ColumnDefinition Width="6*"></ColumnDefinition>
+                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0"
+                              Background="#00B4B3"></Grid>
+                        <TextBlock Style="{StaticResource SideText}"
+                                   VerticalAlignment="Center"
+                                   Margin="12,0,0,0"
+                                   Grid.Column="1"
+                                   HorizontalAlignment="Stretch">Songkick Enabled</TextBlock>
+                        <CheckBox Foreground="#EFFFCD"
+                                  Margin="12"
+                                  Grid.Column="2"
+                                  HorizontalAlignment="Right"
+                                  BorderBrush="#EFFFCD"
+                                  IsChecked="False"></CheckBox>
+                    </Grid>
+
+                    <Grid Margin="0,0,6,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="10"></ColumnDefinition>
+                            <ColumnDefinition Width="6*"></ColumnDefinition>
+                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0"
+                              Background="#FF8000"></Grid>
+                        <TextBlock Style="{StaticResource SideText}"
+                                   VerticalAlignment="Center"
+                                   Margin="12,0,0,0"
+                                   Grid.Column="1"
+                                   HorizontalAlignment="Stretch">Songkick Enabled</TextBlock>
+                        <CheckBox Foreground="#EFFFCD"
+                                  Margin="12"
+                                  Grid.Column="2"
+                                  HorizontalAlignment="Right"
+                                  BorderBrush="#EFFFCD"
+                                  IsChecked="False"></CheckBox>
+                    </Grid>
+
+                    <Grid Margin="0,0,6,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="10"></ColumnDefinition>
+                            <ColumnDefinition Width="6*"></ColumnDefinition>
+                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0"
+                              Background="#00B4B3">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*">
+
+                                </RowDefinition>
+                                <RowDefinition Height="1*">
+
+                                </RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0"
+                                  Background="#FF8000"></Grid>
+                            <Grid Grid.Row="0"
+                                  Background="#0066CC"></Grid>
+                        </Grid>
+                        <TextBlock Style="{StaticResource SideText}"
+                                   VerticalAlignment="Center"
+                                   Margin="12,0,0,0"
+                                   Grid.Column="1"
+                                   HorizontalAlignment="Stretch">Songkick Enabled</TextBlock>
+                        <CheckBox Foreground="#EFFFCD"
+                                  Margin="12"
+                                  Grid.Column="2"
+                                  HorizontalAlignment="Right"
+                                  BorderBrush="#EFFFCD"
+                                  IsChecked="False"></CheckBox>
+                    </Grid>
+
+
+                    <TextBlock Style="{StaticResource SideText}"
+                               HorizontalAlignment="Center">Songkick User Name</TextBlock>
+                    <TextBox Style="{StaticResource SsTextBox}"></TextBox>
+                    <TextBlock Style="{StaticResource SideText}"
+                               HorizontalAlignment="Center">Last.Fm User Name</TextBlock>
+                    <TextBox Style="{StaticResource SsTextBox}"></TextBox>
+
+                    <Button Style="{StaticResource MainButton}"
+                            HorizontalAlignment="Stretch"
+                            Click="SaveButtonClick">Save</Button>
+                </StackPanel>
+
+                <!-- Loading Area -->
+                <StackPanel x:Name="LoadingPanel"
+                            Visibility="Collapsed"
+                            Grid.Row="1">
+                    <ProgressRing Height="100"
+                                  Width="100"
+                                  Margin="24"
+                                  Foreground="#99173C"
+                                  IsActive="True"></ProgressRing>
+                </StackPanel>
+
+                <!-- About Area -->
+                <StackPanel x:Name="AboutPanel"
+                            Visibility="Collapsed"
+                            Grid.Row="1">
+                    <TextBlock Style="{StaticResource SideText}"
+                               HorizontalAlignment="Center"
+                               FontSize="32">Firebelly Studios</TextBlock>
+                    <TextBlock Style="{StaticResource SideText}"
+                               HorizontalAlignment="Center"
+                               FontSize="32"
+                               FontFamily="Segoe MDL2 Assets">&#xE720;</TextBlock>
+                    <TextBlock Style="{StaticResource SideText}"
+                               HorizontalAlignment="Center"
+                               FontSize="16">amphibious software</TextBlock>
+                    <TextBlock Style="{StaticResource SideText}"
+                               HorizontalAlignment="Center"
+                               FontSize="16">Copyright 2015</TextBlock>
+
+                    <Button Style="{StaticResource MainButton}"
+                            HorizontalAlignment="Stretch"
+                            Click="SaveButtonClick">Twitter</Button>
+                    <Button Style="{StaticResource MainButton}"
+                            HorizontalAlignment="Stretch"
+                            Click="SaveButtonClick">Web</Button>
+                    <Button Style="{StaticResource MainButton}"
+                            HorizontalAlignment="Stretch"
+                            Click="SaveButtonClick">Rate Me</Button>
+                </StackPanel>
+            </Grid>
+        </SplitView.Content>
+    </SplitView>
+</Page>
